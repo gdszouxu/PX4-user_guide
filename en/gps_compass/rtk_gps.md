@@ -2,9 +2,9 @@
 
 [Real Time Kinematic (RTK)](https://en.wikipedia.org/wiki/Real_Time_Kinematic) can increase the accuracy of GNSS/GPS systems to centimeter-level, allowing PX4 to be used in applications like precision surveying, where pinpoint accuracy is essential.
 
-RTK GPS devices with a UBlox FP9 chip can also be used as an alternative to a compass for providing heading information.
+Some RTK devices have dual antennas, and can output yaw as well as position infomation (i.e. an alternative way to get yaw from RTK).
 
-Some RTK devices can output yaw as well as position infomation (i.e. an alternative way to get yaw from RTK).
+RTK GPS devices with a UBlox FP9 chip (and an exposed UART2 port) can also be used as an alternative to a compass for providing heading information.
 
 :::note
 RTK positioning and RTK GPS heading with U-blox FP9 modules can be used in parallel (this requires at least three RTK modules).
@@ -21,23 +21,27 @@ This topic covers:
 
 PX4 supports the [u-blox M8P](https://www.u-blox.com/en/product/neo-m8p), [u-blox F9P](https://www.u-blox.com/en/product/zed-f9p-module) and the [Trimble MB-Two](https://www.trimble.com/Precision-GNSS/MB-Two-Board.aspx) GPS, and products that incorporate them.
 
-The following RTK-compatible devices have been tested.
-* [CUAV C-RTK GPS](../gps_compass/rtk_gps_cuav_c-rtk.md)
-* [Drotek XL RTK GPS](../gps_compass/rtk_gps_drotek_xl.md)
-* [Femtones MINI2 Receiver](../gps_compass/rtk_gps_fem_mini2.md)
-* [Freefly RTK GPS](../gps_compass/rtk_gps_freefly.md) (F9P)
-* [Here+ RTK GPS](../gps_compass/rtk_gps_hex_hereplus.md)
-* [Holybro H-RTK F9P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-f9p.md)
-* [Holybro H-RTK M8P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-m8p.md)
-* [SparkFun GPS-RTK2 Board - ZED-F9P](https://www.sparkfun.com/products/15136) (www.sparkfun.com)
-* [SIRIUS RTK GNSS ROVER (F9P)](https://store-drotek.com/911-1010-sirius-rtk-gnss-rover-f9p.html#/158-sensor-no_magnetometer) (store-drotek.com)
-* [Trimble MB-Two](../gps_compass/rtk_gps_trimble_mb_two.md)
+The RTK compatible devices below have been tested.
+The table indicates devices that also output yaw, and that can provide yaw when two on-vehicle units are used.
+
+GPS | [Yaw Output](#rtk-gps-that-output-yaw) | [FP9 GPS Heading](#rtk-gps-heading-setup-configuration-u-blox-f9p)
+:--- | :---: | :---:
+[CUAV C-RTK GPS](../gps_compass/rtk_gps_cuav_c-rtk.md) | | 
+[Drotek XL RTK GPS](../gps_compass/rtk_gps_drotek_xl.md) | | 
+[Femtones MINI2 Receiver](../gps_compass/rtk_gps_fem_mini2.md) | | 
+[Freefly RTK GPS](../gps_compass/rtk_gps_freefly.md) (F9P) | | 
+[Here+ RTK GPS](../gps_compass/rtk_gps_hex_hereplus.md) | | 
+[Holybro H-RTK F9P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-f9p.md) | | 
+[Holybro H-RTK M8P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-m8p.md) | | 
+[SparkFun GPS-RTK2 Board - ZED-F9P](https://www.sparkfun.com/products/15136) | | &check;
+[SIRIUS RTK GNSS ROVER (F9P)](https://store-drotek.com/911-1010-sirius-rtk-gnss-rover-f9p.html#/158-sensor-no_magnetometer) | | &check;
+[mRo u-Blox ZED-F9 RTK L1/L2 GPS](https://store.mrobotics.io/product-p/mr-m10020-a.htm) | | &check;
+[Trimble MB-Two](../gps_compass/rtk_gps_trimble_mb_two.md)  | &check; | 
 
 :::note
 Some RTK modules can only be used in a particular role (base or rover), while others can be used interchangeably.
-Only devices that include a u-blox F9P module can be used for [RTK GPS Heading Setup/Configuration](#rtk-gps-heading-setup-configuration-u-blox-f9p).
+F9P devices that expose the UART2 port can be used in pairs on a device to provide [RTK GPS Heading](#rtk-gps-heading-setup-configuration-u-blox-f9p).
 :::
-
 
 ## Positioning Setup/Configuration
 
@@ -162,25 +166,35 @@ See the [EKF2 GPS Configuration](../advanced_config/tuning_the_ecl_ekf.md#gps) s
 The airframe build topic [DJI Flamewheel 450 with distance sensor and RTK GPS](../frames_multicopter/dji_flamewheel_450.md) describes an airframe setup with the Here+ RTK GPS and a Pixhawk 3 Pro.
 
 
+
 ## RTK GPS Heading Setup/Configuration (U-blox F9P)
 
 Two u-blox F9P devices mounted on a vehicle can be used to accurately compute a heading angle (i.e. an alternative to compass-based heading estimation).
 The two GPS devices in this scenario are referred to as the *Moving Base* and *Rover*.
 
+:::note
+This feature works on F9P devices that expose the GPS UART2 port (access to the port is required for setup).
+:::
+
+:::tip
+The general setup is described in: [ZED-F9P Moving base applications (Application note)](https://www.u-blox.com/sites/default/files/ZED-F9P-MovingBase_AppNote_%28UBX-19009093%29.pdf).
+:::
+
+
 ### Supported Devices
 
-This is the subset of devices above that have a U-blox F9P:
-* [Freefly RTK GPS](../gps_compass/rtk_gps_freefly.md) (F9P)
-* [Holybro H-RTK F9P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-f9p.md)
+The following devices are supported for this use case:
 * [SparkFun GPS-RTK2 Board - ZED-F9P](https://www.sparkfun.com/products/15136) (www.sparkfun.com)
 * [SIRIUS RTK GNSS ROVER (F9P)](https://store-drotek.com/911-1010-sirius-rtk-gnss-rover-f9p.html#/158-sensor-no_magnetometer) (store-drotek.com)
+* [mRo u-Blox ZED-F9 RTK L1/L2 GPS](https://store.mrobotics.io/product-p/mr-m10020-a.htm) (store.mrobotics.io)
+
+:::note
+[Freefly RTK GPS](../gps_compass/rtk_gps_freefly.md) and [Holybro H-RTK F9P GNSS](../gps_compass/rtk_gps_holybro_h-rtk-f9p.md) cannot be used because they do not expose the UART2 port.
+:::
+
 
 
 ### Configuration/Setup
-
-:::tip
-The general setup is described  in: [ZED-F9P Moving base applications (Application note)](https://www.u-blox.com/sites/default/files/ZED-F9P-MovingBase_AppNote_%28UBX-19009093%29.pdf).
-:::
 
 In overview:
 - The UART2 of the GPS devices need to be connected together (TXD2 of the "Moving Base" to RXD2 of the "Rover")
@@ -209,10 +223,10 @@ The application note does not state the minimal required separation between modu
 To activate heading fusion for the attitude estimation, set the [EKF2_AID_MASK](../advanced_config/parameter_reference.md#EKF2_AID_MASK) parameter to enable *GPS yaw fusion*.
 
 
-## RTK GPS that Output Yaw 
+## RTK GPS that Output Yaw
 
-Some RTK GPS units (i.e. with multiple antennas) can output a yaw angle.
-This can be used instead of the heading from the magnetic compass, and as an alternative to [RTK Heading with Two FP9 modules](#rtk-gps-heading-setup-configuration-u-blox-f9p).
+Some RTK GPS units have multiple antennas, and can output a yaw angle.
+This yaw can be used instead of the heading from the magnetic compass (and as an alternative to [RTK Heading with Two FP9 modules](#rtk-gps-heading-setup-configuration-u-blox-f9p)).
 
 ###  Supported Devices
 
@@ -222,5 +236,14 @@ This can be used instead of the heading from the magnetic compass, and as an alt
 
 [RTK Positioning](#positioning-setup-configuration) should be set up as normal.
 
-Then enable yaw by setting bit position 7 in [EKF2_AID_MASK](../advanced_config/parameter_reference.md#EKF2_AID_MASK) to 1 (add 128 to the parameter value).
+In order to use the GPS for yaw fusion you will also need to configure:
 
+Parameter | Setting
+--- | ---
+[GPS_YAW_OFFSET](../advanced_config/parameter_reference.md#GPS_YAW_OFFSET) |  The angle made by the *baseline* (the line between the two GPS antennas) relative to the vehicle x-axis (front/back axis, as shown [here](../config/flight_controller_orientation.md#calculating-orientation)).
+[EKF2_AID_MASK](../advanced_config/parameter_reference.md#EKF2_AID_MASK) | Set bit position 7 "GPS yaw fusion" to `1` (i.e. add 128 to the parameter value).
+
+
+:::tip
+Additional device-specific configuration is covered in the device documentation (e.g. [Trimble MB-Two > Configuration](../gps_compass/rtk_gps_trimble_mb_two.md#configuration)).
+:::
